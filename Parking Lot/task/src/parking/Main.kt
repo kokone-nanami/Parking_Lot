@@ -38,21 +38,9 @@ class ParkingLot(size: Int) {
         }
     }
 
-    fun reg_by_color(color: String) {
-        val res = spaces.filterNotNull().filter { it.color.toLowerCase() == color.toLowerCase() }.joinToString(", ") { it.number }
-        if (res == "") println("No cars with color $color were found.")
-        else println(res)
-    }
-    fun spot_by_color(color: String) {
-        val res = spaces.filterNotNull().filter { it.color.toLowerCase() == color.toLowerCase() }.map { it.spot + 1 }.joinToString(", ")
-        if (res == "") println("No cars with color $color were found.")
-        else println(res)
-    }
-    fun spot_by_reg(number: String) {
-        val res = spaces.filterNotNull().filter { it.number.toLowerCase() == number.toLowerCase() }.map { it.spot + 1 }.joinToString(", ")
-        if (res == "") println("No cars with registration number $number were found.")
-        else println(res)
-    }
+    fun reg_by_color(color: String) = println(spaces.filterNotNull().filter { it.color.toLowerCase() == color.toLowerCase() }.joinToString(", ") { it.number }.ifEmpty { "No cars with color $color were found." })
+    fun spot_by_color(color: String) = println(spaces.filterNotNull().filter { it.color.toLowerCase() == color.toLowerCase() }.map { it.spot + 1 }.joinToString(", ").ifEmpty { "No cars with color $color were found." })
+    fun spot_by_reg(number: String) = println(spaces.filterNotNull().filter { it.number.toLowerCase() == number.toLowerCase() }.map { it.spot + 1 }.joinToString(", ").ifEmpty { "No cars with registration number $number were found." })
 }
 
 fun defaultAsNull() = println("Sorry, a parking lot has not been created.")
