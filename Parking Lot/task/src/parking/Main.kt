@@ -3,9 +3,12 @@ package parking
 data class Car(val number: String, val color: String)
 
 class ParkingLot(size: Int) {
-    private val spaces: Array<Car?> = Array(20) { null }
+    private val spaces: Array<Car?> = Array(size) { null }
 
     private fun nextAvailable(): Int = spaces.indexOf(null)
+    private fun empty(): Boolean = spaces.filterNotNull().isEmpty()
+
+    val size = spaces.size
 
     fun park(num: String, color: String) {
         when (val i = nextAvailable()) {
@@ -25,22 +28,34 @@ class ParkingLot(size: Int) {
             println("Spot $num is free.")
         }
     }
+    fun status() {
+        if (empty())
+            println("Parking lot is empty.")
+        else {
+            for (i in spaces.indices)
+                if (spaces[i] != null)
+                    println("${i+1} ${spaces[i]!!.number} ${spaces[i]!!.color}")
+        }
+    }
 }
 
+fun defaultAsNull() = println("Sorry, a parking lot has not been created.")
+
 fun main() {
-    val parkingLot = ParkingLot(20)
+    var parkingLot: ParkingLot? = null
     while (true) {
         val line = readLine()!!
         if (line == "exit")
             break
         val cmd = line.split(" ")
         when (cmd[0]) {
-            "park" -> {
-                parkingLot.park(cmd[1], cmd[2])
+            "create" -> {
+                parkingLot = ParkingLot(cmd[1].toInt())
+                println("Created a parking lot with ${parkingLot.size} spots.")
             }
-            "leave" -> {
-                parkingLot.leave(cmd[1].toInt())
-            }
+            "park" -> parkingLot?.park(cmd[1], cmd[2]) ?: defaultAsNull()
+            "leave" -> parkingLot?.leave(cmd[1].toInt()) ?: defaultAsNull()
+            "status" -> parkingLot?.status() ?: defaultAsNull()
             else -> throw IllegalArgumentException()
         }
     }
